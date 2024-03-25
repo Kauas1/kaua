@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Contador de Salários</title>
+</head>
+
+<body>
+
+  <form class="form">
+    <H1 class="salarioFinal">Salário Final: </H1>
+    <header>
+      <div class="form">
+        <div>
+          <label for="id">Qual o seu ID</label>
+          <input type="number" placeholder="De 1 a 10" id="id" minlength="1" maxlength="2" required>
+          <span class="validity"></span>
+        </div>
+
+        <div>
+          <label for="categoria">Qual a sua categoria?</label>
+          <input type="text" placeholder="Operário ou Gerente" id="categoria" minlength="1" maxlength="1" required>
+          <span class="validity"></span>
+        </div>
+
+        <div>
+          <label for="horas">Quantas horas trabalhou no mês?</label>
+          <input type="number" placeholder="Exemplo: 2" id="horas" minlength="1" maxlength="2" required>
+          <span class="validity"></span>
+        </div>
+
+        <div>
+          <label for="turno">Qual seu Turno?</label>
+          <input type="text" placeholder="Vespertino, Matutino, Noturno" id="turno" minlength="1" maxlength="1"
+            required>
+          <span class="validity"></span>
+        </div>
+
+        <div> <button id="btn" type="button">Gerar Salário</button>
+        </div>
+    </header>
+
+    </div>
+  </form>
+
+  <div class="relatorio">
+
+
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>
