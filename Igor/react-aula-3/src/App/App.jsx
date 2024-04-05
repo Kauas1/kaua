@@ -37,20 +37,20 @@ const luana = {
     let gasto = 0
     
     dados.compras.forEach((dado) => {
-      dado.compras.replace("R$", "")
+      dados.compras.replace("R$", "")
     })
 
     const limite = gasto > 10000 ? "Você está gastando Muito!" : "Sua situação está OK!"
-    const ativo = dados.ativa ? "Ativo" : "Inativ"  
+    const ativo = dados.ativa ? "Ativo" : "Inativo"  
     const cor = dados.ativa = "Ativo" ? "green" : "red"
     
     return <div>
       
     <p>Nome: {dados.cliente}</p>
     <p>Idade: {dados.idade}</p>
-    <p>Situação: {dados.cliente}</p>
-    <p>Nome: {dados.cliente}</p>
-    <p>Nome: {dados.cliente}</p>
+    <p style={dados.ativa == true ? {color: 'green'} : {color: 'red'}}> {dados.ativa == true ? 'Ativa' : 'Inativa'}</p>
+    <p>Gastos: {gasto}</p>
+    <p>Limite: ${limite}</p>
     </div>;
 
   }
