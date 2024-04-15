@@ -22,11 +22,18 @@ Esses requisitos funcionais adicionais garantem não apenas a segurança dos dad
 
 ### Rotas para Aplicação:
 
-1. **POST /participants**: Rota para cadastrar um novo participante. O corpo da requisição deve incluir as informações do participante (nome, e-mail, senha, idade, cidade).
-2. **GET /participants**: Rota para obter a lista de todos os participantes cadastrados.
-3. **GET /participants/{id}**: Rota para obter os detalhes de um participante específico com base no seu ID.
-4. **PUT /participants/{id}**: Rota para atualizar as informações de um participante específico com base no seu ID. O corpo da requisição deve incluir os dados a serem atualizados.
-5. **DELETE /participants/{id}**: Rota para excluir um participante específico com base no seu ID.
+1. **POST /participants**: Rota para cadastrar um novo participante. O corpo da requisição deve incluir as informações do participante (nome, e-mail, senha, idade, cidade). (+ /-)
+
+2. **GET /participants**: Rota para obter a lista de todos os participantes cadastrados. (sim)
+
+3. **GET /participants/{id}**: Rota para obter os detalhes de um participante específico com base no seu ID. (sim)
+
+4. **PUT /participants/{id}**: Rota para atualizar as informações de um participante específico com base no seu ID. O corpo da requisição deve incluir os dados a serem atualizados. (sim)
+
+5. **DELETE /participants/{id}**: Rota para excluir um participante específico com base no seu ID. (sim)
+
 6. **GET /participants/count**: Rota para contar o número total de participantes cadastrados.
+
 7. **GET /participants/count/over18**: Rota para contar quantos participantes são maiores de 18 anos.
+
 8. **GET /participants/city/most**: Rota para identificar a cidade com o maior número de participantes.
