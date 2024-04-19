@@ -1,0 +1,16 @@
+
+article{
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 400px;
+    background-color: antiquewhite;
+    justify-content: space-evenly;
+    
+}
+
+img{
+    width: 100px;
+}
+
+
