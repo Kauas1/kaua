@@ -1,0 +1,17 @@
+.welcome-section{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+.welcome-titulo{
+    font-size: 50px;
+    font-family: Poppins, sans-serif;
+}
+
+.welcome-texto{
+    font-family: Poppins, sans-serif;
+    margin-right: 20px;
+}
