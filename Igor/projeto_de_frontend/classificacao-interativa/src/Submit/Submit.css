@@ -1,0 +1,17 @@
+@import url(https://fonts.google.com/specimen/Overpass);
+
+*{
+    font-family: Overpass, sans-serif;
+}
+
+.submit{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 450px;
+    height: 40px;
+    
+    background-color: hsl(25, 97%, 53%);
+    color: white;
+    border-radius: 60px;
+}

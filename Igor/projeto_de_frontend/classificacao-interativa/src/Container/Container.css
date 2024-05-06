@@ -1,0 +1,23 @@
+.Title{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    
+}
+
+.h1{
+    color:white;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 250px;
+    
+}
+
+.subTitle{
+    color:hsl(217, 12%, 63%);
+    margin: 5px;
+    text-align: left;
+    padding-right: 30px;
+    margin-right: 0px;
+    padding-left: 20px;
+}
