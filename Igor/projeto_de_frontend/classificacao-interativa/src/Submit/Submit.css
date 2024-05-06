@@ -10,8 +10,9 @@
     justify-content: center;
     width: 450px;
     height: 40px;
-    
+    border: none;
     background-color: hsl(25, 97%, 53%);
     color: white;
     border-radius: 60px;
+    cursor: pointer;
 }
