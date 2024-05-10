@@ -1,0 +1,43 @@
+@import url(https://fonts.google.com/specimen/Karla);
+
+.principal-title{
+    display: flex;
+    padding-left: 30px;
+    padding-top: 15px;
+    margin: 0px;
+    font-family: Karla,sans-serif;
+}
+
+.principal-subtitle{
+    display: flex;
+    padding-left: 30px;
+    padding-top: 20px;
+    margin: 0px;
+    font-family: Karla,sans-serif;
+}
+
+.principal-p{
+    display:flex;
+    width: 470px;
+    padding-left: 30px;
+    margin: 0px;
+    padding-top: 10px;
+    font-size: 15px;
+}
+
+.secundary-title{
+    display: flex;
+    padding-left: 30px;
+    padding-top: 15px;
+    margin: 0px;
+    font-family: Karla,sans-serif;
+    color: white;
+}
+
+.include{
+    display: flex;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    
+}
