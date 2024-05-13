@@ -1,0 +1,77 @@
+@import url(https://fonts.google.com/specimen/Montserrat);
+@import url(https://fonts.google.com/specimen/Fraunces); 
+
+
+body{
+    background-color: blanchedalmond;
+}
+
+.PutTogether{
+    display: flex;
+    width: 600px;
+    align-items: center;
+    justify-content: center;
+}
+
+.image{
+    width: 266px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.container{
+    width: 250px;
+    height: 400px;
+    background-color: white;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding-left: 20px;
+}
+
+.Title{
+    font-family: Montserrat, sans-serif;
+    
+}
+
+.Title2{
+    margin-right: 100px;    
+}
+
+.Title3{
+    margin-right: 60px;
+}
+
+.price{
+    display: flex;
+    justify-content: space-evenly;
+    height: 60  px;
+}
+
+.price2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: line-through;
+    margin: 0;
+}
+
+.submit{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-family: Fraunces,sans-serif;
+    cursor: pointer;
+    transform: scale3d(1.05, 1.05, 1);
+    transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;  
+}
+
+.submit:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transform: scale3d(1.001, 1.001, 1);
+   
+}
+
+
+
