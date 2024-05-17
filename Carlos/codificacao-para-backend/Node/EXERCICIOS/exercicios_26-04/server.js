@@ -88,35 +88,35 @@ const server = http.createServer((req, res) => {
       const id = parseInt(url.split('/')[2])
 
       let body = ''
-      req.on('data', (chunk)=>{
+      req.on('data', (chunk) => {
         body += chunk
       })
-      req.on('end', ()=> {
-        fs.readFile("funcionarios.json", "utf8", (err,data)=>{
-          if(err){
-            res.writeHead(500, {"Content-Type": "application/json"})
-            res.end(({message: "Erro ao ler o arquivo"}))
+      req.on('end', () => {
+        fs.readFile("funcionarios.json", "utf8", (err, data) => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" })
+            res.end(({ message: "Erro ao ler o arquivo" }))
           }
 
           const jsonData = JSON.parse(data)
-          const indexFuncionario = jsonData.findIndex((funcionario)=> funcionario.id === id)
+          const indexFuncionario = jsonData.findIndex((funcionario) => funcionario.id === id)
 
-          if(indexFuncionario === -1){
-            res.writeHead(404, {'Content-Type': 'application/json'})
-            res.end(JSON.stringify({message: 'Funcionário não encontrado!'}))
+          if (indexFuncionario === -1) {
+            res.writeHead(404, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'Funcionário não encontrado!' }))
           }
 
           const funcionarioAtualizado = JSON.parse(body)
           funcionarioAtualizado.id = id
-          
+
           jsonData[indexFuncionario] === funcionarioAtualizado
 
-          fs.write('funcionarios.json', JSON.stringify(jsonData, null, 2), (err)=>{
-            if(err){
-              res.writeHead(500, {'Content-Type': 'application/json'})
-              res.end(JSON.stringify({message: 'Erro ao ler o arquivo'}))
+          fs.write('funcionarios.json', JSON.stringify(jsonData, null, 2), (err) => {
+            if (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' })
+              res.end(JSON.stringify({ message: 'Erro ao ler o arquivo' }))
             }
-            res.writeHead(200, {"Content-Type": "application/json"})
+            res.writeHead(200, { "Content-Type": "application/json" })
             res.end(JSON.stringify(funcionarioAtualizado))
           })
         })
@@ -172,31 +172,31 @@ const server = http.createServer((req, res) => {
       }
     } else if (method === 'GET' && url.startsWith('/empregados/porHabilidade/')) {
 
-  const habilidade = url.split('/')[3]
-      fs.readFile("funcionarios.json", "utf8", (err, data)=>{
+      const habilidade = url.split('/')[3]
+      fs.readFile("funcionarios.json", "utf8", (err, data) => {
 
-        if(err){
-          res.writeHead(500, {"Content-Type": "application/json"})
-          res.end(JSON.stringify({message: "Erro ao ler o arquivo"}))
+        if (err) {
+          res.writeHead(500, { "Content-Type": "application/json" })
+          res.end(JSON.stringify({ message: "Erro ao ler o arquivo" }))
         }
 
         const jsonData = JSON.parse(data)
 
-        const funcionariosPorHabilidade = jsonData.filter((funcionario)=> funcionario.habilidades.includes(habilidade)
+        const funcionariosPorHabilidade = jsonData.filter((funcionario) => funcionario.habilidades.includes(habilidade)
         )
-        
-        if(funcionariosPorHabilidade.length === 0){
-          res.writeHead(404, {"Content-Type": "application/json"})
+
+        if (funcionariosPorHabilidade.length === 0) {
+          res.writeHead(404, { "Content-Type": "application/json" })
           res.end(
-            JSON.stringify({message: "Não existe funcionario com essa habilidade"})
+            JSON.stringify({ message: "Não existe funcionario com essa habilidade" })
           )
           return;
         }
-        res.writeHead(200, {"Content-Type": "application/json"})
+        res.writeHead(200, { "Content-Type": "application/json" })
         res.end(JSON.stringify(funcionariosPorHabilidade))
       })
 
-      
+
 
     } else if (method === 'GET' && url.startsWith('/empregados/porFaixaSalarial/')) {
       /* Requisições
@@ -205,26 +205,26 @@ const server = http.createServer((req, res) => {
          Query PARAM -> porFaixaSalarial?valor1=10&valor2=20
       */
       const urlParams = new URLSearchParams(url.split('?')[1])
-      const minSalario =  urlParams.get("minSalario")
-      const maxSalario =  urlParams.get("maxSalario")
+      const minSalario = urlParams.get("minSalario")
+      const maxSalario = urlParams.get("maxSalario")
 
-      fs.readFile("funcionarios.json", "utf8", (err, data)=> {
-        if(err){
-          res.writeHead(500, {"Content-Type": "application/json"})
-          res.end(JSON.stringify({message: "Erro ao ler o arquivo"}))
+      fs.readFile("funcionarios.json", "utf8", (err, data) => {
+        if (err) {
+          res.writeHead(500, { "Content-Type": "application/json" })
+          res.end(JSON.stringify({ message: "Erro ao ler o arquivo" }))
         }
 
         const jsonData = JSON.parse(data)
-        const funcionarioPorFaixaSalarial = jsonData.filter((funcionario)=> funcionario.salario >= minSalario && funcionario.salario <= maxSalario
+        const funcionarioPorFaixaSalarial = jsonData.filter((funcionario) => funcionario.salario >= minSalario && funcionario.salario <= maxSalario
         )
-        if(funcionarioPorFaixaSalarial.length === 0){
-          res.writeHead(404, {"Content-Type": "application/json"})
+        if (funcionarioPorFaixaSalarial.length === 0) {
+          res.writeHead(404, { "Content-Type": "application/json" })
           res.end(
-            JSON.stringify({message: "Não existe funcionario com essa faixa salarial"})
+            JSON.stringify({ message: "Não existe funcionario com essa faixa salarial" })
           )
           return
         }
-        res.writeHead(200, {"Content-Type": "application/json"})
+        res.writeHead(200, { "Content-Type": "application/json" })
         res.end(JSON.stringify(funcionarioPorFaixaSalarial))
 
       })

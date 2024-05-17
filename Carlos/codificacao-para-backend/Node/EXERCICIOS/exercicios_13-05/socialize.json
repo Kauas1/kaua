@@ -1,0 +1,14 @@
+{
+"email": "carlos@gmail.com",
+"nome": "Carlos Wilton",
+"senha": "1234",
+"confirmarEmail": "carlos@gmail.com",
+
+"perfil": {
+    "id": "1",
+    "nome":"Carlos Wilton Vasconselos",
+    "bio": "Hi, I'am Carlos Vasconcelos. TI teacher and web developer.",
+    "imagem": "https://avatars.githubusercontent.com/u/81450652?v=4"
+}
+
+}

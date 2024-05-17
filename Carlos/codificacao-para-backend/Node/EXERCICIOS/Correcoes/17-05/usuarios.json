@@ -1,0 +1,13 @@
+[
+  {
+    "nome": "Carlos Wilton",
+    "email": "carlos@email.com",
+    "password": "123456",
+    "id": "154bf105-bd53-4e9b-bcb5-a35dbce9eba6",
+    "perfil": {
+      "nome": "Wilton",
+      "bio": "Instrutor e Desenvolvedor",
+      "caminhoImagem": "C:\\Users\\3°E\\Desktop\\kaua\\Carlos\\codificacao-para-backend\\Node\\EXERCICIOS\\Correcoes\\17-05\\imagens\\154bf105-bd53-4e9b-bcb5-a35dbce9eba6.png"
+    }
+  }
+]

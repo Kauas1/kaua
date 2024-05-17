@@ -1,25 +1,85 @@
-import React from "react"
-
-//React.useState - É uma função que retorna um Array com 2 valores. O primeiro valor guarda o dado do estado atual que pode ser qualquer tipo de dado como strings, arrays, numeros, boolean, null, undefined ou objetos. O segundo valor é uma função que pode ser utilizada para modificarmos o estado do primeiro valor.
-
-// Quando a função de modificação do estado é ativada, todos os componetes que dependeram do estado, serão renderizados e os seus filhos também. É isso que garante a reatividade de componentes funcionais no React.
-
-//Hooks
-// Os Hooks são funções especiais do React que permitem controlarmos o estado e o ciclo de vida decomponentes funcionais.
+import React, { useState } from 'react';
+import Input from '../src/Form/Input';
 
 const App = () => {
   
-  const [ativo, setAtivo] = React.useState(true)
-  const [contar, setContar] = React.useState(0)
-  return(
-    <> 
-    <button onClick={() => setAtivo(!ativo)}>
-      {ativo ? "Botão Ativo" : "Botão Inativo"}
-    </button>
-    <button onClick={() => setContar(contar+
-    1)}>{contar}</button>
-    </>
-  )
-}
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    senha: '',
+    cep: '',
+    rua: '',
+    numero: '',
+    bairro: '',
+    cidade: '',
+    estado: ''
+  });
+
+  const handleInputChange = (fieldName, value) => {
+    setFormData({...formData, [fieldName]: value });
+  };
+
+  return (
+    <div>
+      <Input
+        label="Nome"
+        value={formData.nome}
+        onChange={(value) => handleInputChange('nome', value)}
+      />
+      <Input
+        label="Email"
+        value={formData.email}
+        onChange={(value) => handleInputChange('email', value)}
+      />
+      <Input
+        label="Senha"
+        value={formData.senha}
+        onChange={(value) => handleInputChange('senha', value)}
+      />
+      <Input
+        label="CEP"
+        value={formData.cep}
+        onChange={(value) => handleInputChange('cep', value)}
+      />
+      <Input
+        label="Rua"
+        value={formData.rua}
+        onChange={(value) => handleInputChange('rua', value)}
+      />
+      <Input
+        label="Número"
+        value={formData.numero}
+        onChange={(value) => handleInputChange('numero', value)}
+      />
+      <Input
+        label="Bairro"
+        value={formData.bairro}
+        onChange={(value) => handleInputChange('bairro', value)}
+      />
+      <Input
+        label="Cidade"
+        value={formData.cidade}
+        onChange={(value) => handleInputChange('cidade', value)}
+      />
+      <Input
+        label="Estado"
+        value={formData.estado}
+        onChange={(value) => handleInputChange('estado', value)}
+      />
+
+      <div>
+        <p>Nome: {formData.nome}</p>
+        <p>Email: {formData.email}</p>
+        <p>Senha: {formData.senha}</p>
+        <p>CEP: {formData.cep}</p>
+        <p>Rua: {formData.rua}</p>
+        <p>Número: {formData.numero}</p>
+        <p>Bairro: {formData.bairro}</p>
+        <p>Cidade: {formData.cidade}</p>
+        <p>Estado: {formData.estado}</p>
+      </div>
+    </div>
+  );
+};
 
 export default App;

@@ -1,4 +1,4 @@
-import {Titulo, Titulo2, Container, Titulo3, Container2, Container3} from '../Styles/App'
+import {Titulo, Titulo2, Container, Titulo3, Container2, Container3} from './Styles/App'
 import './App.css'
 
 
