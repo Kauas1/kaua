@@ -1,0 +1,25 @@
+[
+  {
+    "nome": "João Silva",
+    "idade": 30,
+    "email": "joao.silva@email.com",
+    "endereco": {
+      "rua": "Rua das Flores",
+      "numeros": "123",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01234-567"
+    },
+    "telefones": [
+      {
+        "tipo": "celular",
+        "numero": "(11) 98765-4321"
+      },
+      {
+        "tipo": "residencial",
+        "numero": "(11) 1234-5678"
+      }
+    ],
+    "id": 1
+  }
+]

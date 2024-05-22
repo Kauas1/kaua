@@ -1,190 +1,167 @@
-import http from 'http'
-import fs from 'node:fs'
-import url from 'url'
-import formidavel from 'formidable'
-const model = {
-"email": "carlos@gmail.com",
-"nome": "Carlos Wilton",
-"senha": "1234",
-"confirmarEmail": "carlos@gmail.com",
+import { createServer } from "node:http";
+import { writeFile, readFile, rename } from "node:fs";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-"perfil": {
-    "id": "1",
-    "nome":"Carlos Wilton Vasconselos",
-    "bio": "Hi, I'am Carlos Vasconcelos. TI teacher and web developer.",
-    "imagem": "https://avatars.githubusercontent.com/u/81450652?v=4"
-}
-}
-const PORT = 3333
+import formidable, { errors as formidableErrors } from "formidable";
+import { v4 as uuidv4 } from "uuid";
 
-const server = http.createServer((req, res) => {
-    const {url, method} = req
+import lerDadosUsuarios from "./lerUsuarios.js";
 
-    fs.readFile("socialize.json", "utf8", (err,data)=>{
-        if(err){
-            res.writeHead(500, {'Content-Type': 'applicaiton/json'})
-            res.end(JSON.stringify({message: "Erro interno do servidor"}))
-            return
+const PORT = 3333;
+
+//import e export
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const server = createServer(async (request, response) => {
+  const { method, url } = request;
+  if (method === "GET" && url === "/usuarios") {
+    lerDadosUsuarios((err, usuarios) => {
+      if (err) {
+        response.writeHead(500, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ message: "Não possível ler o arquivo" }));
+        return;
+      }
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(usuarios));
+    });
+  } else if (method === "POST" && url === "/usuarios") {
+    let body = "";
+    request.on("data", (chunk) => {
+      body += chunk;
+    });
+    request.on("end", () => {
+      const novoUsuario = JSON.parse(body);
+      //Validações do dados vindo do body
+      lerDadosUsuarios((err, usuarios) => {
+        if (err) {
+          response.writeHead(500, { "Content-Type": "application/json" });
+          response.end(
+            JSON.stringify({ message: "Não possível ler o arquivo" })
+          );
+          return;
         }
 
-        let jsonData = []
-        try{
-            jsonData = JSON.parse(data)
-        }catch(error){
-            console.error("Erro ao analisar JSON:", error)
+        novoUsuario.id = uuidv4();
+
+        const verificaSeEmailExiste = usuarios.find(
+          (usuario) => usuario.email === novoUsuario.email
+        );
+
+        if (verificaSeEmailExiste) {
+          response.writeHead(400, { "Content-Type": "application/json" });
+          response.end(JSON.stringify({ message: "Email já está em uso" }));
+          return;
         }
 
-        if(url === "/usuarios" && method === "GET"){
-            res.writeHead(200, {"Content-Type": "application/json"})
-            res.end(JSON.stringify(jsonData))
-        }else if(url === "/login" && method === "POST"){
-            
-            let body = ""
-            req.on("data", (chunk)=>{
-                body += chunk.toString()
-            })
-            req.on("end", ()=>{
-                const newItem = JSON.parse(body)
-                if(!newItem.hasOwnProperty('senha') || !newItem.hasOwnProperty('nome')|| !newItem.hasOwnProperty('email') ){
-                    res.writeHead(401, {"Content-Type": "application/json"})
-                    res.end(JSON.stringify({message: `Erro ao cadastar o usuario, siga o modelo: ${model} `}))
-                }else{
-                    if(newItem.email === newItem.confirmaEmail){
-                        res.writeHead(401, {"Content-Type": "application/json"})
-                        res.end(JSON.stringify({message: "Esse email ja está registrado."}))
-                    }else{
-                        newItem.id = jsonData.length + 1 // Gerar um novo ID
-                        jsonData.push(newItem)
-                        fs.writeFile("socialize.json", JSON.stringify(jsonData,null,2), (err)=>{
-                            if(err){
-                                res.writeHead(500, {"Content-Type": "application/json"})
-                                res.end(JSON.stringify({message: "Erro interno do servidor"}))
-                                return
-                            }
-                            res.writeHead(201, {"Content-Type": "application/json"})
-                            res.end(JSON.stringify(newItem))
-                        })
-                    
-                    }
-                }
-            })
-        }else if(method === 'PUT' && url.startsWith('/perfil/')){
-            const id = parseInt(url.split("/")[2])
-            let body = ""
-            req.on("data", (chunk)=>{
-                body += chunk.toString()
-            })
-            req.on("end", ()=>{
-                const updatedItem = JSON.parse(body)
-                // procurar o perfil pelo ID e atualizar seus dados
-                const index = jsonData.findIndex((item)=> item.perfil === id)
-                if(index !== -1){
-                    if(!newItem.hasOwnProperty('senha') || !newItem.hasOwnProperty('nome') || !newItem.hasOwnProperty('email') ){
-                        res.writeHead(401, {"Content-Type": "application/json"})
-                        res.end(JSON.stringify({message: `Não foi autorizado a atualização do usuário. Siga o modelo ${model}`}))
-                    }
-                    jsonData[index] = { ...jsonData[index], ...updatedItem}
-                    fs.writeFile("funcionarios.json"(jsonData, null, 2), (err)=>{
-                        if(err){
-                            res.writeHead(500, {"Content-Type":"application/json"})
-                            res.end(JSON.stringify(jsonData[index]))
-                        }
-                    }
-                    )
-                }else{
-                    res.writeHead(404, {"Content-Type": "application/json"})
-                    res.end(JSON.stringify({message: "Perfil não encontrado."}))
-                }
-            })
-            
-        }else if(method === "GET" && url.startsWith('/perfil/')){
-            const perfilID = url.split('/')[2]
-            const findPerfil = jsonData.find(dado => dado.id == perfilID)
+        usuarios.push(novoUsuario);
 
-            if(!findPerfil){
-                res.writeHead(404, {'Content-Type': 'application/json'})
-                return res.end(JSON.stringify({message: "Perfil não encontrado."}))
-            }else{
-                res.setHeader('Content-Type', 'application/json')
-                return res.end(JSON.stringify(findPerfil))
-            }
-        }else if(method === "POST" && url === '/login'){
-
-            let body = ""
-            req.on("data", (chunk) =>{
-                body += chunk.toString()
-            })
-            req.on("end", () => {
-                const login = JSON.parse(body)
-                
-                if(login.email !== login.email){
-                    res.writeHead(401, {"Content-Type": "application/json"})
-                    res.end(JSON.stringify({message: "Email não cadastrado."}))
-                }else if(login.senha !== login.senha){
-                    res.writeHead(401, {"Content-Type": "application/json"})
-                    res.end(JSON.stringify({message:"Senha Incorreta."}))
-                }else if(login.email == login.email && login.senha == login.confirmaSenha){
-                    res.writeHead(200, {'Content-Type': 'application/json'})
-                    res.end(JSON.stringify({message: `Bem vindo ${login.nome[login.id]}`}))
-                }
-               
-            } )
-            
-        }else if (req.url === '/perfil' && req.method.toUpperCase() === 'PUT') {
-            let body = '';
-            req.on('data', chunk => {
-              body += chunk.toString();
-            });
-            const findPerfil = jsonData.find(dado => dado.perfil == userProfile)
-            req.on('end', () => {
-              const data = JSON.parse(body);
-              const { nome, bio } = data;
-        
-              if (nome) {
-                userProfile.nome = nome;
-              }
-              if (bio) {
-                userProfile.bio = bio;
-              }
-              sendJSONResponse(res, 200, {
-                message: 'Perfil atualizado com sucesso',
-                perfil: userProfile.perfil
-              });
-            });
-        }else if (req.url === '/perfil/imagem' && req.method === 'POST') {
-            const form = new formidavel.IncomingForm();
-           
-            const findPerfil = jsonData.find(dado => dado.perfil == userProfile)
-
-            form.parse(req, (err, fields, files) => {
-              if (err) {
-                return sendJSONResponse(res, 500, { message: 'Erro ao processar o upload da imagem' });
-              }
-        
-              const oldPath = files.imagem.path;
-              const newPath = path.join(form.uploadDir, files.imagem.name);
-        
-              fs.rename(oldPath, newPath, (err) => {
-                if (err) {
-                  return sendJSONResponse(res, 500, { message: 'Erro ao salvar a imagem' });
-                }
-        
-                userProfile.perfil.imagem = `http://localhost:3333/uploads/${files.imagem.name}`;
-        
-                sendJSONResponse(res, 200, {
-                  message: 'Imagem de perfil atualizada com sucesso',
-                  perfil: userProfile.perfil
-                });
-              });
-            });
-            } else {
-            res.writeHead(404, {'Content-Type': 'application/json'});
-            res.end('Rota não encontrada');
+        writeFile("usuarios.json", JSON.stringify(usuarios, null, 2), (err) => {
+          if (err) {
+            response.writeHead(500, { "Content-Type": "application/json" });
+            response.end(
+              JSON.stringify({ message: "Não cadastrar os dados no arquivo" })
+            );
+            return;
           }
+          response.writeHead(201, { "Content-Type": "application/json" });
+          response.end(JSON.stringify(novoUsuario));
+        });
+      });
+    });
+  } else if (method === "POST" && url === "/perfil") {
+    const form = formidable({});
+    let fields;
+    let files;
+    try {
+      [fields, files] = await form.parse(request);
+    } catch (err) {
+      // example to check for a very specific error
+      if (err.code === formidableErrors.maxFieldsExceeded) {
+      }
+      console.error(err);
+      response.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
+      response.end(String(err));
+      return;
+    }
 
-    })
-})
+    const { id, nome, bio } = fields;
+    const imagemDePerfil = files.imagemDePerfil;
+    //NORMALIZE O CAMINHO DA IMAGEM
 
-server.listen(PORT, ()=>{
-    console.log(`Servidor on PORT:${PORT}`)
-})
+    if (!nome || !bio || !imagemDePerfil) {
+      response.writeHead(400, { "Content-Type": "application/json" });
+      response.end(
+        JSON.stringify({
+          error:
+            "Todos os campos são obrigatórios: nome, bio, Imagem do Perfil",
+        })
+      );
+      return;
+    }
+
+    lerDadosUsuarios((err, usuarios) => {
+      if (err) {
+        response.writeHead(500, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ message: "Erro ao ler o Arquivo" }));
+        return;
+      }
+
+      const indexUsuario = usuarios.findIndex(
+        (usuario) => usuario.id === id[0]
+      );
+
+      if (indexUsuario === -1) {
+        response.writeHead(400, { "Content-Type": "application/json" });
+        response.end(
+          JSON.stringify({
+            message: "Faça o cadastro antes de criar um perfil",
+          })
+        );
+        return;
+      }
+
+      //caminho/imagens/id.png
+      const caminhoImagem = path.join(__dirname, "imagens", id + ".png");
+
+      const perfil = {
+        nome: nome[0],
+        bio: bio[0],
+        caminhoImagem,
+      };
+
+      usuarios[indexUsuario] = { ...usuarios[indexUsuario], perfil };
+
+      writeFile("usuarios.json", JSON.stringify(usuarios, null, 2), (err) => {
+        if (err) {
+          response.writeHead(500, { "Content-Type": "application/json" });
+          response.end(
+            JSON.stringify({message: "Não é possível escrever no arquivo JSON"})
+          );
+          return;
+        }
+
+        rename(files.imagemDePerfil[0].filepath, caminhoImagem, (err) => {
+          if (err) {
+            console.log("err: ", err)
+            response.writeHead(500, { "Content-Type": "application/json" });
+            response.end(JSON.stringify({message: "Não é salvar a imagem" }));
+            return;
+          }
+        });
+
+        response.writeHead(201, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ message: "Perfil Criado" }));
+
+      });
+    });
+  } else {
+    response.writeHead(404, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ message: "Página não encontrada" }));
+  }
+});
+
+server.listen(PORT, () => {
+  console.log(`Servidor on PORT: ${PORT}`);
+});

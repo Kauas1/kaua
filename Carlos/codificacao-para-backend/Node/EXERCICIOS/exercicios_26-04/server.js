@@ -242,6 +242,8 @@ const server = http.createServer((req, res) => {
         res.setHeader('Content-Type', 'application/json')
         return res.end(JSON.stringify(findEmploy))
       }
+
+      
     } else {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: "Rota não encontrada" }));

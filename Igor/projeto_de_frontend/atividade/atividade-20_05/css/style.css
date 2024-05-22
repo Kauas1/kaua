@@ -1,0 +1,41 @@
+:root{
+    --black: #000;
+    --white: #FFF;
+    --gray: #708090;
+}
+.container{
+    width: 900px;
+    border: 2px solid var(--gray);
+    background-color: var(--black);
+}
+
+img{
+    width: 900px;
+    height: 500px;
+}
+
+nav{
+    text-align: left;
+    padding: 20px 20px;
+    background-color: var(--gray);
+    font-size: 25px;
+
+}
+.nav-link{
+    text-decoration: none;
+    color: var(--white);
+    font-weight: bold;
+    margin-right: 20px;
+
+}
+
+article{
+    padding: 20px 20px;
+    background-color: var(--black);
+    color: var(--white);
+}
+
+footer{
+    text-align: center;
+    color: var(--white);
+}
