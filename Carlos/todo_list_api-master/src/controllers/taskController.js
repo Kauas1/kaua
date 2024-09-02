@@ -3,12 +3,14 @@ import { z } from "zod";
 import formatZodError from "../middleware/zodError.js";
 
 //Validações com ZOD
-
 const createSchema = z.object({
     tarefa: z.string().min(3, { message: "A tarefa deve ter pelo menos 3 caracteres" }).transform((txt)=>txt.toLowerCase()),
     descricao:  z.string().min(5, { message: "A tarefa deve ter pelo menos 5 caracteres" })
 })
 
+const getSchema = z.object({
+  id: z.string().uuid({message: "Id da tarefa. está inválido."})
+})
 
 // Adicionar uma nova tarefa:
 export const createNewTask = async (req, res) => {
@@ -19,7 +21,6 @@ export const createNewTask = async (req, res) => {
     res.status(400).json({message: "Os dados estão incompletos.", detalhes: formatZodError(bodyValidation.error)})
     return
   }
-
 
   const { nome, descricao } = req.body
   const status = "pendente"
@@ -70,9 +71,20 @@ export const getTasksByPage = async (req, res) => {
   }
 }
 
-// Buscar tarefa por ID
-export const getTasksByID = async (req, res) => {
+  // Buscar tarefa por ID
+export const getTasksByID = async (req, res) => { //3
+
+  const paramValidator = getSchema.safeParse(req.params)
+  if(!paramValidator.success){
+    res.status(400).json({ message: "Número de identificação está inválida.",
+    detalhes: formatZodError(paramValidator.error)
+    })
+    return
+  }
+
   const tarefaId = req.params.id
+  
+
 
   try {
     const tarefa = await Tarefa.findByPk(tarefaId)
