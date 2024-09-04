@@ -4,7 +4,7 @@ const formatZodError = (error) =>{
     error.errors.forEach((err) => {
         const path = err.path[0]
         if(!erroFormatado[path]){
-            erroFormatado[path = []]
+            erroFormatado[path] = []
         }
         erroFormatado[path].push(err.message)
     });

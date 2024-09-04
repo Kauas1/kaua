@@ -12,6 +12,16 @@ const getSchema = z.object({
   id: z.string().uuid({message: "Id da tarefa. está inválido."})
 })
 
+const buscarTarefaPorSituacaoSchema = z.object({
+  situacao: z.enum(["pendente", "concluida"])
+})
+
+const updateTarefaSchema = z.object({
+    tarefa: z.string().min(3,{message: "A Tarefa deve ter pelo menos 3 caracteres"}).transform((txt)=> txt.toLocaleLowerCase()),
+    descricao: z.string().min(3,{message: "A Descrição deve ter pelo menos 3 caracteres"}).transform((txt)=> txt.toLocaleLowerCase()),
+    situacao: z.enum(["pendente", "concluida"])
+})
+
 // Adicionar uma nova tarefa:
 export const createNewTask = async (req, res) => {
   
@@ -84,8 +94,6 @@ export const getTasksByID = async (req, res) => { //3
 
   const tarefaId = req.params.id
   
-
-
   try {
     const tarefa = await Tarefa.findByPk(tarefaId)
 
@@ -106,6 +114,24 @@ export const getTasksByID = async (req, res) => { //3
 
 // Atualizar tarefa
 export const updateTask = async (req, res) => {
+  
+  const paramValidator = getSchema.safeParse(req.params)
+  if(!paramValidator.success){
+    res.status(400).json({ message: "Número de identificação está inválida.",
+    detalhes: formatZodError(paramValidator.error)
+    })
+    return
+  }
+
+  const updateValidator = updateTarefaSchema.safeParse(req.body)
+  if(!updateValidator.success){
+    res.status(400).json({
+      message: "Dados para atualização estão incorretos",
+      detalhes: formatZodError(updateValidator.error)
+    })
+    return
+  }
+  
   const { id } = req.params
   const { nome, descricao, status } = req.body
   
@@ -136,6 +162,15 @@ export const updateTask = async (req, res) => {
 
 // Atualizar status da tarefa
 export const updateStatus = async (req, res) => {
+ 
+  const paramValidator = getSchema.safeParse(req.params)
+  if(!paramValidator.success){
+    res.status(400).json({ message: "Número de identificação está inválida.",
+    detalhes: formatZodError(paramValidator.error)
+    })
+    return
+  }
+ 
   const { id } = req.params
   const { status } = req.body
 
@@ -169,6 +204,17 @@ export const updateStatus = async (req, res) => {
 
 // Buscar tarefas por situação
 export const getTasksByStatus = async (req, res) => {
+ 
+ 
+  const situacaoValidation  = buscarTarefaPorSituacaoSchema.safeParse(req.params)
+  if(!situacaoValidation.success){
+    res.status(400).json({
+      message: "Situação inválida.",
+      detalhes: formatZodError(situacaoValidation.error)
+    })
+    return
+  }
+ 
   const { situacao } = req.params
 
   if (situacao !== "pendente" && situacao !== "concluida") {
